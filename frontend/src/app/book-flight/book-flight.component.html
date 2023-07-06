@@ -1,2 +1,6 @@
-<p>book-flight works!</p>
-<h2>Flight Id: {{flightId}}</h2>
+
+<div class="p-8 bg-red-300 text-red-700 font-bold">
+  <h2 *ngIf="errorStatus !== 200">Flight with id : {{flightId}} has not been found!</h2>
+</div>
+
+<h2>{{foundFlight.price}}</h2>

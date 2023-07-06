@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 import { SearchFlightsComponent } from './search-flights/search-flights.component';
 import { HeaderComponent } from './header/header.component';
 import { BookFlightComponent } from './book-flight/book-flight.component';
+import { NotfoundComponent } from './notfound/notfound.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { BookFlightComponent } from './book-flight/book-flight.component';
     SearchFlightsComponent,
     HeaderComponent,
     BookFlightComponent,
+    NotfoundComponent,
   ],
   imports: [
     BrowserModule,
@@ -25,6 +27,7 @@ import { BookFlightComponent } from './book-flight/book-flight.component';
       { path: '', component: SearchFlightsComponent, pathMatch: 'full' },
       { path: 'search-flights', component: SearchFlightsComponent },
       { path: 'book-flights/:flightId', component: BookFlightComponent },
+      {path: '**', component: NotfoundComponent}
     ]),
   ],
   providers: [],

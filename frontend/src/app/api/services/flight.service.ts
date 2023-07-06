@@ -17,6 +17,11 @@ export class FlightService {
     return this.http.get<FlightRm[]>(this.apiUrl);
   }
 
+  // * get single flight
+  getFlight(id: string) {
+    return this.http.get<FlightRm>(`${this.apiUrl}/${id}`);
+  }
+
   // TODO create service
   createFlight(data: FlightRm) {
     return this.http.post<FlightRm>(this.apiUrl, { data });
