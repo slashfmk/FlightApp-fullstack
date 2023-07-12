@@ -10,6 +10,8 @@ import { SearchFlightsComponent } from './search-flights/search-flights.componen
 import { HeaderComponent } from './header/header.component';
 import { BookFlightComponent } from './book-flight/book-flight.component';
 import { NotfoundComponent } from './notfound/notfound.component';
+import { RegisterPassengerComponent } from './register-passenger/register-passenger.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -18,8 +20,11 @@ import { NotfoundComponent } from './notfound/notfound.component';
     HeaderComponent,
     BookFlightComponent,
     NotfoundComponent,
+    RegisterPassengerComponent,
   ],
   imports: [
+    FormsModule,
+    ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
@@ -27,6 +32,7 @@ import { NotfoundComponent } from './notfound/notfound.component';
       { path: '', component: SearchFlightsComponent, pathMatch: 'full' },
       { path: 'search-flights', component: SearchFlightsComponent },
       { path: 'book-flights/:flightId', component: BookFlightComponent },
+      {path: 'register-passenger', component: RegisterPassengerComponent},
       {path: '**', component: NotfoundComponent}
     ]),
   ],

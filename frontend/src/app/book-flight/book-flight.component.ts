@@ -31,7 +31,7 @@ export class BookFlightComponent implements OnInit {
       (err) => {
         this.errorStatus = err.status;
         if (err.status !== 200)
-          setTimeout(() => this.router.navigate(['/']), 1000);
+          setTimeout(() => this.router.navigate(['/search-flights']), 1000);
       }
     );
   }
