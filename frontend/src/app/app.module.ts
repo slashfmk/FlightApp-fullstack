@@ -32,8 +32,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
       { path: '', component: SearchFlightsComponent, pathMatch: 'full' },
       { path: 'search-flights', component: SearchFlightsComponent },
       { path: 'book-flights/:flightId', component: BookFlightComponent },
-      {path: 'register-passenger', component: RegisterPassengerComponent},
-      {path: '**', component: NotfoundComponent}
+      { path: 'register-passenger', component: RegisterPassengerComponent },
+      { path: '**', component: NotfoundComponent },
     ]),
   ],
   providers: [],

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IPassenger, PassengerService } from '../passenger.service';
 import { FormBuilder } from '@angular/forms';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-register-passenger',
@@ -27,6 +28,7 @@ import { FormBuilder } from '@angular/forms';
         <input
           class="p-5 border-2"
           type="email"
+          (blur)="checkPassenger()"
           placeholder="Email"
           formControlName="email"
         />
@@ -67,6 +69,7 @@ export class RegisterPassengerComponent implements OnInit {
 
   constructor(
     private passengerService: PassengerService,
+    private authService: AuthService,
     private formBuilder: FormBuilder
   ) {}
 
@@ -79,22 +82,32 @@ export class RegisterPassengerComponent implements OnInit {
     isFemale: [false],
   });
 
+  checkPassenger(): void {
+    const params = { email: this.formToPassenger().email };
+
+    this.passengerService.getPassenger(params.email).subscribe(
+      (response) => console.log('Passenger exists'),
+      (err) => console.log(err)
+    );
+  }
+
+
   // convert form input to IPassenger type
   formToPassenger(): IPassenger {
     return {
-      firstName: this.form.value.firstName ?? '',
-      lastName: this.form.value.lastName ?? '',
-      email: this.form.value.email ?? '',
-      isFemale: this.form.value.isFemale ?? false,
+      firstName: this.form.get('firstName')?.value ?? '',
+      lastName: this.form.get('lastName')?.value ?? '',
+      email: this.form.get('email')?.value ?? '',
+      isFemale: this.form.get('isFemale')?.value ?? false,
     };
   }
 
   // Create a new passenger
   createPassenger() {
     this.passengerService.createPassenger(this.formToPassenger()).subscribe(
-      (response) => console.log(response),
+      (response) =>
+        this.authService.loginUser({ email: this.formToPassenger().email }),
       (err) => console.log(err)
     );
-    console.log(this.form.value);
   }
 }

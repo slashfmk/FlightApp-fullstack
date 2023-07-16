@@ -11,7 +11,8 @@ var app = builder.Build();
 
 // Cors setting
 app.UseCors(builder => builder
-.WithOrigins("*")
+// .WithOrigins("*")
+.AllowAnyOrigin()
 .AllowAnyMethod()
 .AllowAnyHeader());
 

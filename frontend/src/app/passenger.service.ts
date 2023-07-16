@@ -6,7 +6,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class PassengerService {
-  private apiUrl: string = 'localhost:3000/passenger';
+
+  private apiUrl: string = 'http://localhost:5165/passenger';
 
   constructor(private http: HttpClient) {}
 
@@ -21,8 +22,8 @@ export class PassengerService {
   }
 
   // Get a specific passenger
-  getPassenger(id: string): Observable<IPassenger> {
-    return this.http.get<IPassenger>(`${this.apiUrl}/${id}`);
+  getPassenger(email: string): Observable<IPassenger> {
+    return this.http.get<IPassenger>(`${this.apiUrl}/${email}`);
   }
 }
 
