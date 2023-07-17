@@ -2,32 +2,35 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FlightRm } from '../models/flight-rm';
+import { IBookDto } from '../models/IBookDto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FlightService {
   // attributes
-  private apiUrl = 'http://localhost:5165/Flight';
+  private apiUrl = 'http://localhost:5165';
 
   constructor(private http: HttpClient) {}
 
   // * Read flights -- completed
   getFlights(): Observable<FlightRm[]> {
-    return this.http.get<FlightRm[]>(this.apiUrl);
+    return this.http.get<FlightRm[]>(this.apiUrl + "/Flight");
   }
 
   // * get single flight
   getFlight(id: string) {
-    return this.http.get<FlightRm>(`${this.apiUrl}/${id}`);
+    return this.http.get<FlightRm>(`${this.apiUrl}/Flight/${id}`);
   }
 
   // TODO create service
   createFlight(data: FlightRm) {
-    return this.http.post<FlightRm>(this.apiUrl, { data });
+    return this.http.post<FlightRm>(this.apiUrl + "/Flight", { data });
   }
 
-  // TODO Update flights
+  // TODO Book flight
+  bookFlight(data: IBookDto): Observable<string> {
+    return this.http.post<string>(`${this.apiUrl}/Booking`, data );
+  }
 
-  // TODO Delete flight
 }

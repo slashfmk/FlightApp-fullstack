@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { IPassenger } from '../models/IPassenger';
 
 @Injectable({
   providedIn: 'root',
@@ -25,11 +26,4 @@ export class PassengerService {
   getPassenger(email: string): Observable<IPassenger> {
     return this.http.get<IPassenger>(`${this.apiUrl}/${email}`);
   }
-}
-
-export interface IPassenger {
-  firstName: string;
-  lastName: string;
-  email: string;
-  isFemale: boolean;
 }

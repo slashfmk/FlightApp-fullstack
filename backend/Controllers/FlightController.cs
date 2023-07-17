@@ -10,8 +10,13 @@ public class FlightController : ControllerBase
 
 
     static private List<FlightRm> Flights = new();
+    static private List<BookDto> bookings = new();
     static private Random Randomize = new Random();
 
+    public FlightController()
+    {
+        this.LoadFlights();
+    }
 
     private void LoadFlights()
     {
@@ -28,7 +33,7 @@ public class FlightController : ControllerBase
             "Africa airline", Randomize.NextInt64(3000),
             new TimePlaceRm("Los angeles", DateTime.Now),
             new TimePlaceRm("Johannesburg", DateTime.Now),
-             (int) Randomize.NextInt64(500)
+             (int)Randomize.NextInt64(500)
             ));
 
         Flights.Add(new FlightRm(
@@ -36,7 +41,7 @@ public class FlightController : ControllerBase
         "Wonderful airline", Randomize.NextInt64(3000),
         new TimePlaceRm("Minnesota", DateTime.Now),
         new TimePlaceRm("New Hampshire", DateTime.Now),
-         (int) Randomize.NextInt64(500)
+         (int)Randomize.NextInt64(500)
         ));
     }
 
@@ -61,6 +66,20 @@ public class FlightController : ControllerBase
 
         if (FoundFlight == null) return NotFound();
         return Ok(FoundFlight);
+    }
+
+    [HttpPost("/Booking")]
+    public ActionResult<string> Book(BookDto bookDto)
+    {
+        bookings.Add(bookDto);
+        var confirmation = $"user: {bookDto.PassengerEmail} booked for flight {bookDto.FlightId}";
+        return confirmation;
+    }
+
+    [HttpGet("/Bookings")]
+    public ActionResult<List<BookDto>> Bookings()
+    {
+        return bookings;
     }
 
 }

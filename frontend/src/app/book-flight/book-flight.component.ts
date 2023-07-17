@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { FlightService } from '../api/services/flight.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { FlightRm } from '../api/models/flight-rm';
+import { FlightService } from '../api/services/flight.service';
+import { AuthService } from '../auth/auth.service';
+import { IBookDto } from '../api/models/IBookDto';
 
 @Component({
   selector: 'app-book-flight',
@@ -9,18 +11,20 @@ import { FlightRm } from '../api/models/flight-rm';
   styleUrls: ['./book-flight.component.css'],
 })
 export class BookFlightComponent implements OnInit {
-  flightId: string = 'Not loaded';
+
   foundFlight: FlightRm = {};
   errorStatus: number = 200;
 
+  @Input() flightId = '';
+
   constructor(
-    private route: ActivatedRoute,
     private flightService: FlightService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((pr) => this.findFlight(pr.get('flightId')));
+    console.log(this.flightId);
   }
 
   private findFlight(flightId: string | null) {
@@ -34,5 +38,25 @@ export class BookFlightComponent implements OnInit {
           setTimeout(() => this.router.navigate(['/search-flights']), 1000);
       }
     );
+  }
+
+
+  bookFlight() {
+    // prepare the booking for the user
+    const userDto: IBookDto = {
+      PassengerEmail: this.authService.currentUser?.email ?? '',
+      FlightId: this.flightId,
+      NumberOfSeats: 1,
+    };
+
+    // Booking happens here
+    this.flightService.bookFlight(userDto).subscribe(
+      (response) => console.log('Booking saved successfully'),
+      (error) => console.log(error)
+    );
+
+    setTimeout(() => {
+      this.router.navigate(['/']);
+    }, 1000);
   }
 }

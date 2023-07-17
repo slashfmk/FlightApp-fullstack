@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FlightRm } from '../api/models/flight-rm';
 import { FlightService } from '../api/services/flight.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-search-flights',
@@ -13,7 +14,10 @@ export class SearchFlightsComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  constructor(private flightService: FlightService) {}
+  constructor(
+    private flightService: FlightService,
+    private authService: AuthService
+  ) { }
 
   public search() {
     this.isLoading = true;
@@ -23,6 +27,10 @@ export class SearchFlightsComponent implements OnInit {
       .subscribe((response: FlightRm[]) => (this.searchResult = response));
 
     this.isLoading = false;
+  }
+
+  public userExists() {
+    return this.authService.currentUser;
   }
 
   // Create a new flight

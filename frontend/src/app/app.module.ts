@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
+import { RouterModule, withComponentInputBinding } from '@angular/router';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -36,8 +36,9 @@ import { MyBookingsComponent } from './my-bookings/my-bookings.component';
       { path: 'book-flights/:flightId', component: BookFlightComponent },
       { path: 'register-passenger', component: RegisterPassengerComponent },
       {path: 'my-bookings', component: MyBookingsComponent},
-      { path: '**', component: NotfoundComponent },
-    ]),
+      { path: '**', component: NotfoundComponent }],
+      {bindToComponentInputs: true}) // Allows the use of @Input() for url param
+    ,
   ],
   providers: [],
   bootstrap: [AppComponent],

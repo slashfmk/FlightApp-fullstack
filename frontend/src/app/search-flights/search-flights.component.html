@@ -40,7 +40,8 @@
 
         <div>
           <h3>{{flight.price}}</h3>
-          <button [routerLink]="['/book-flights', flight.id]" class="bg-slate-700 text-slate-400 p-3 rounded-md">Book</button>
+          <button *ngIf="userExists()" [routerLink]="['/book-flights/', flight.id]" class="bg-slate-700 text-slate-400 p-3 rounded-md">Book</button>
+          <button *ngIf="!userExists()" [routerLink]="['/register-passenger']" class="bg-slate-700 text-slate-400 p-3 rounded-md">Book</button>
         </div>
 
         <div>

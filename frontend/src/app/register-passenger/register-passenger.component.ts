@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { IPassenger, PassengerService } from '../passenger.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { PassengerService } from '../api/services/passenger.service';
 import { FormBuilder } from '@angular/forms';
 import { AuthService } from '../auth/auth.service';
+import { FlightService } from '../api/services/flight.service';
+import { Router } from '@angular/router';
+import { IPassenger } from '../api/models/IPassenger';
 
 @Component({
   selector: 'app-register-passenger',
@@ -67,13 +70,19 @@ import { AuthService } from '../auth/auth.service';
 export class RegisterPassengerComponent implements OnInit {
   // private passengerService = Inject(PassengerService);
 
+  @Input() flightId = '';
+
   constructor(
     private passengerService: PassengerService,
+    private flightService: FlightService,
     private authService: AuthService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private router: Router
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log(this.flightId);
+  }
 
   form = this.formBuilder.group({
     firstName: [''],
@@ -91,7 +100,6 @@ export class RegisterPassengerComponent implements OnInit {
     );
   }
 
-
   // convert form input to IPassenger type
   formToPassenger(): IPassenger {
     return {
@@ -102,11 +110,13 @@ export class RegisterPassengerComponent implements OnInit {
     };
   }
 
-  // Create a new passenger
+  // Register a new passenger
   createPassenger() {
     this.passengerService.createPassenger(this.formToPassenger()).subscribe(
-      (response) =>
-        this.authService.loginUser({ email: this.formToPassenger().email }),
+      (response) => {
+        this.authService.loginUser({ email: this.formToPassenger().email });
+        this.router.navigate(['/']);
+      },
       (err) => console.log(err)
     );
   }
