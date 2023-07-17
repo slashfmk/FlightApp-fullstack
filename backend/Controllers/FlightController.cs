@@ -82,4 +82,11 @@ public class FlightController : ControllerBase
         return bookings;
     }
 
+    [HttpGet("/MyBookings/{userEmail}")]
+    public ActionResult<List<BookDto>> MyBookings(string userEmail) 
+    {
+        var MyBookings = bookings.FindAll(bk => bk.PassengerEmail == userEmail);
+        return Ok(MyBookings);
+    }
+
 }
