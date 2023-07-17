@@ -12,6 +12,7 @@ import { BookFlightComponent } from './book-flight/book-flight.component';
 import { NotfoundComponent } from './notfound/notfound.component';
 import { RegisterPassengerComponent } from './register-passenger/register-passenger.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MyBookingsComponent } from './my-bookings/my-bookings.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     BookFlightComponent,
     NotfoundComponent,
     RegisterPassengerComponent,
+    MyBookingsComponent,
   ],
   imports: [
     FormsModule,
@@ -33,6 +35,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
       { path: 'search-flights', component: SearchFlightsComponent },
       { path: 'book-flights/:flightId', component: BookFlightComponent },
       { path: 'register-passenger', component: RegisterPassengerComponent },
+      {path: 'my-bookings', component: MyBookingsComponent},
       { path: '**', component: NotfoundComponent },
     ]),
   ],

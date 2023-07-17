@@ -28,7 +28,7 @@ namespace backend.Controllers
             return Created("Passenger created successfully", newPassengerDto);
         }
 
-        [HttpGet]
+        [HttpGet] 
         public ActionResult<List<NewPassengerDto>> GetAll()
         {
             return Ok(Passengers);
