@@ -1,4 +1,15 @@
-﻿namespace backend.Dtos
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace backend.Dtos
 {
-    public record BookDto (Guid FlightId, string PassengerEmail, byte NumberOfSeats);
+    public record BookDto(
+        [Required]
+        Guid FlightId,
+        [Required]
+        [EmailAddress]
+        string PassengerEmail,
+        [Required]
+        [Range(1, 254)]
+        byte NumberOfSeats
+        );
 }

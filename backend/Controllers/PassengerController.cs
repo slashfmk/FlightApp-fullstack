@@ -29,6 +29,8 @@ namespace backend.Controllers
         }
 
         [HttpGet] 
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public ActionResult<List<NewPassengerDto>> GetAll()
         {
             return Ok(Passengers);

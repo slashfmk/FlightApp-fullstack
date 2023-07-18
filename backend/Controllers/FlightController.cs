@@ -9,41 +9,35 @@ public class FlightController : ControllerBase
 {
 
 
-    static private List<FlightRm> Flights = new();
-    static private List<BookDto> bookings = new();
-    static private Random Randomize = new Random();
-
-    public FlightController()
-    {
-        this.LoadFlights();
-    }
-
-    private void LoadFlights()
-    {
-        Flights.Add(new FlightRm(
+    private static List<BookDto> bookings = new();
+    private static Random Randomize = new Random();
+    
+    private static List<FlightRm> Flights = new List<FlightRm> {
+        new FlightRm(
                    Guid.NewGuid(),
                    "United airline", Randomize.NextInt64(3000),
                    new TimePlaceRm("Ottawa", DateTime.Now),
                    new TimePlaceRm("kinshasa", DateTime.Now),
                    (int)Randomize.NextInt64(500)
-                   ));
+                   ),
 
-        Flights.Add(new FlightRm(
+        new FlightRm(
             Guid.NewGuid(),
             "Africa airline", Randomize.NextInt64(3000),
             new TimePlaceRm("Los angeles", DateTime.Now),
             new TimePlaceRm("Johannesburg", DateTime.Now),
              (int)Randomize.NextInt64(500)
-            ));
+            ),
 
-        Flights.Add(new FlightRm(
+        new FlightRm(
         Guid.NewGuid(),
         "Wonderful airline", Randomize.NextInt64(3000),
         new TimePlaceRm("Minnesota", DateTime.Now),
         new TimePlaceRm("New Hampshire", DateTime.Now),
          (int)Randomize.NextInt64(500)
-        ));
-    }
+        )
+    };
+
 
 
     [ProducesResponseType(400)]
@@ -52,7 +46,6 @@ public class FlightController : ControllerBase
     [HttpGet(Name = "GetSearch")]
     public ActionResult<List<FlightRm>> Search()
     {
-        this.LoadFlights();
         return Ok(Flights);
     }
 
@@ -69,11 +62,14 @@ public class FlightController : ControllerBase
     }
 
     [HttpPost("/Booking")]
+    [ProducesResponseType(201)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(400)]
     public ActionResult<string> Book(BookDto bookDto)
     {
         bookings.Add(bookDto);
         var confirmation = $"user: {bookDto.PassengerEmail} booked for flight {bookDto.FlightId}";
-        return confirmation;
+        return Created("Booking created", confirmation);
     }
 
     [HttpGet("/Bookings")]
@@ -83,7 +79,10 @@ public class FlightController : ControllerBase
     }
 
     [HttpGet("/MyBookings/{userEmail}")]
-    public ActionResult<List<BookDto>> MyBookings(string userEmail) 
+    [ProducesResponseType(200)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(400)]
+    public ActionResult<List<BookDto>> MyBookings(string userEmail)
     {
         var MyBookings = bookings.FindAll(bk => bk.PassengerEmail == userEmail);
         return Ok(MyBookings);
