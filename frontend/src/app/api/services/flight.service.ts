@@ -23,7 +23,7 @@ export class FlightService {
     return this.http.get<FlightRm>(`${this.apiUrl}/Flight/${id}`);
   }
 
-  // TODO create service
+  // * create service
   createFlight(data: FlightRm) {
     return this.http.post<FlightRm>(this.apiUrl + "/Flight", { data });
   }
@@ -31,6 +31,11 @@ export class FlightService {
   // TODO Book flight
   bookFlight(data: IBookDto): Observable<string> {
     return this.http.post<string>(`${this.apiUrl}/Booking`, data );
+  }
+
+  // TODO Get booking flights
+  getBookedFlights(email: string): Observable<IBookDto[]> {
+    return this.http.get<IBookDto[]>(`${this.apiUrl}/MyBookings/${email}`);
   }
 
 }

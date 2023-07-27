@@ -1,10 +1,10 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { IBookDto } from '../api/models/IBookDto';
 import { FlightRm } from '../api/models/flight-rm';
 import { FlightService } from '../api/services/flight.service';
 import { AuthService } from '../auth/auth.service';
-import { IBookDto } from '../api/models/IBookDto';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-book-flight',

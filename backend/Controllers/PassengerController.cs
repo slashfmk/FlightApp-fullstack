@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using backend.Dtos;
 using Microsoft.AspNetCore.Http.HttpResults;
+using backend.Domain.Entities;
 
 namespace backend.Controllers
 {
@@ -15,23 +16,29 @@ namespace backend.Controllers
     public class PassengerController : ControllerBase
     {
 
-        static private List<NewPassengerDto> Passengers = new ();
+        static private List<Passenger> Passengers = new ();
 
         [HttpPost]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public ActionResult<string> Register(NewPassengerDto newPassengerDto)
+        public ActionResult<string> Register(PassengerDto dto)
         {
-            Passengers.Add(newPassengerDto);
-            System.Diagnostics.Debug.WriteLine(Passengers.Count);
-            return Created("Passenger created successfully", newPassengerDto);
+            Passengers.Add(new Passenger(
+                dto.Email,
+                dto.FirstName,
+                dto.LastName,
+                dto.IsFemale
+            ));
+
+            // System.Diagnostics.Debug.WriteLine(Passengers.Count);
+            return Created("Passenger created successfully", dto);
         }
 
         [HttpGet] 
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public ActionResult<List<NewPassengerDto>> GetAll()
+        public ActionResult<List<PassengerDto>> GetAll()
         {
             return Ok(Passengers);
         }
@@ -40,14 +47,12 @@ namespace backend.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public ActionResult<List<NewPassengerDto>> GetPassenger(string email)
+        public ActionResult<List<PassengerDto>> GetPassenger(string email)
         {
             var PassengerFound = Passengers.FirstOrDefault(p => p.Email == email);
 
-            if (PassengerFound == null)
-            {
-                return NotFound();
-            }
+            if (PassengerFound is null) return NotFound();
+
             return Ok(PassengerFound);
         }
     }

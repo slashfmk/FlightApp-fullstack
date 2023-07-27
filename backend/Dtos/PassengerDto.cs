@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace backend.Dtos
 {
-    public record NewPassengerDto(
+    public record PassengerDto(
         [Required]
         [EmailAddress]
         string Email,
