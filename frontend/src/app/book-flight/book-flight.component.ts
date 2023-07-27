@@ -26,7 +26,7 @@ export class BookFlightComponent implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit(): void {
-    console.log(this.flightId);
+    // console.log(this.flightId);
   }
 
   form = this.formBuilder.group({
@@ -63,7 +63,7 @@ export class BookFlightComponent implements OnInit {
 
     // prepare the booking for the user
     const userDto: IBookDto = {
-      PassengerEmail: this.authService.currentUser?.email ?? '',
+      PassengerEmail: this.authService.currentUser?.email as string,
       FlightId: this.flightId,
       NumberOfSeats: this.form.get('seats')?.value ?? 0,
     };

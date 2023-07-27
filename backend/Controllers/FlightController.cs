@@ -2,6 +2,8 @@ using backend.models;
 using Microsoft.AspNetCore.Mvc;
 using backend.Dtos;
 using backend.Domain.Entities;
+using backend.Domain.Errors;
+
 namespace backend.Controllers;
 
 [ApiController]
@@ -20,7 +22,7 @@ public class FlightController : ControllerBase
                    "United airline", Randomize.NextInt64(3000),
                    new TimePlace("Ottawa", DateTime.Now),
                    new TimePlace("kinshasa", DateTime.Now),
-                   (int)Randomize.NextInt64(500)
+                   20
                    ),
 
         new Flight(
@@ -93,14 +95,11 @@ public class FlightController : ControllerBase
         var flight = Flights.SingleOrDefault(f => f.Id == bookDto.FlightId);
 
         if (flight is null) return NotFound();
-        // Not enough seats available for booking request
-        if (flight.RemainingSeats < bookDto.NumberOfSeats) return Conflict("Sorry, Not enough seats available");
-        // Check for valid number of seats request
-        if (bookDto.NumberOfSeats <= 0) return Conflict("You cannot book 0 or a negative number of seats");
-        // Then add that booking when everything goes well
-        flight.bookings.Add(new Booking(bookDto.FlightId, bookDto.PassengerEmail, bookDto.NumberOfSeats));
-        // Update the number of available seats
-        flight.RemainingNumberOfSeats -= bookDto.NumberOfSeats;
+
+        var Error = flight.MakeBooking(bookDto.PassengerEmail, bookDto.NumberOfSeats);
+
+        if (Error is OverbookError) return Conflict(new { message = "Sorry, Not enough seats available" });
+        if (Error is NotPositiveError) return Conflict(new { message = "You cannot provide a negative number of seats" });
 
         var confirmation = $"user: {bookDto.PassengerEmail} booked for flight {bookDto.FlightId}";
         return Created("Booking created", confirmation);
@@ -109,7 +108,8 @@ public class FlightController : ControllerBase
     [HttpGet("/Bookings")]
     public ActionResult<List<BookDto>> Bookings()
     {
-        return bookings.Select( Book => new BookDto(Book.FlightId, Book.PassengerEmail, Book.NumberOfSeats)).ToList();
+        var MyBookings = bookings.Select(Book => new Booking(Book.PassengerEmail, Book.NumberOfSeats)).ToList();
+        return Ok(MyBookings);
     }
 
     [HttpGet("/MyBookings/{userEmail}")]
