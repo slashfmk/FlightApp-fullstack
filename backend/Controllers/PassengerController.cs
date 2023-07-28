@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using backend.Dtos;
 using Microsoft.AspNetCore.Http.HttpResults;
 using backend.Domain.Entities;
+using backend.Data;
 
 namespace backend.Controllers
 {
@@ -16,7 +17,12 @@ namespace backend.Controllers
     public class PassengerController : ControllerBase
     {
 
-        static private List<Passenger> Passengers = new ();
+        private readonly Entities _entities;
+
+        public PassengerController(Entities entities)
+        {
+            _entities = entities;
+        }
 
         [HttpPost]
         [ProducesResponseType(201)]
@@ -24,7 +30,7 @@ namespace backend.Controllers
         [ProducesResponseType(500)]
         public ActionResult<string> Register(PassengerDto dto)
         {
-            Passengers.Add(new Passenger(
+            _entities.Passengers.Add(new Passenger(
                 dto.Email,
                 dto.FirstName,
                 dto.LastName,
@@ -35,12 +41,12 @@ namespace backend.Controllers
             return Created("Passenger created successfully", dto);
         }
 
-        [HttpGet] 
+        [HttpGet]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         public ActionResult<List<PassengerDto>> GetAll()
         {
-            return Ok(Passengers);
+            return Ok(_entities.Passengers);
         }
 
         [HttpGet("{email}")]
@@ -49,7 +55,7 @@ namespace backend.Controllers
         [ProducesResponseType(500)]
         public ActionResult<List<PassengerDto>> GetPassenger(string email)
         {
-            var PassengerFound = Passengers.FirstOrDefault(p => p.Email == email);
+            var PassengerFound = _entities.Passengers.FirstOrDefault(p => p.Email == email);
 
             if (PassengerFound is null) return NotFound();
 

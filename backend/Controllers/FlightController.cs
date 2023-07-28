@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using backend.Dtos;
 using backend.Domain.Entities;
 using backend.Domain.Errors;
+using backend.Data;
 
 namespace backend.Controllers;
 
@@ -11,38 +12,12 @@ namespace backend.Controllers;
 public class FlightController : ControllerBase
 {
 
+    private readonly Entities _entities;
 
-    private static List<Booking> bookings = new();
-
-    private static Random Randomize = new Random();
-
-    private static List<Flight> Flights = new List<Flight> {
-        new Flight(
-                   Guid.NewGuid(),
-                   "United airline", Randomize.NextInt64(3000),
-                   new TimePlace("Ottawa", DateTime.Now),
-                   new TimePlace("kinshasa", DateTime.Now),
-                   20
-                   ),
-
-        new Flight(
-            Guid.NewGuid(),
-            "Africa airline", Randomize.NextInt64(3000),
-            new TimePlace("Los angeles", DateTime.Now),
-            new TimePlace("Johannesburg", DateTime.Now),
-             (int)Randomize.NextInt64(500)
-            ),
-
-        new Flight(
-        Guid.NewGuid(),
-        "Wonderful airline", Randomize.NextInt64(3000),
-        new TimePlace("Minnesota", DateTime.Now),
-        new TimePlace("New Hampshire", DateTime.Now),
-         (int)Randomize.NextInt64(500)
-        )
-    };
-
-
+    public FlightController(Entities entities)
+    {
+        _entities = entities;
+    }
 
     [ProducesResponseType(400)]
     [ProducesResponseType(500)]
@@ -51,7 +26,7 @@ public class FlightController : ControllerBase
     public ActionResult<List<FlightRm>> Search()
     {
 
-        var flightRmList = Flights.Select(Flight => new FlightRm(
+        var flightRmList = _entities.Flights.Select(Flight => new FlightRm(
             Flight.Id,
             Flight.Airline,
             Flight.Price,
@@ -69,7 +44,7 @@ public class FlightController : ControllerBase
     [HttpGet("{id}")]
     public ActionResult<FlightRm> Find(Guid id)
     {
-        var FoundFlight = Flights.SingleOrDefault(f => f.Id == id);
+        var FoundFlight = _entities.Flights.SingleOrDefault(f => f.Id == id);
 
         var readModel = new FlightRm(
             FoundFlight.Id,
@@ -92,7 +67,7 @@ public class FlightController : ControllerBase
     public ActionResult<string> Book(BookDto bookDto)
     {
 
-        var flight = Flights.SingleOrDefault(f => f.Id == bookDto.FlightId);
+        var flight = _entities.Flights.SingleOrDefault(f => f.Id == bookDto.FlightId);
 
         if (flight is null) return NotFound();
 
@@ -108,7 +83,7 @@ public class FlightController : ControllerBase
     [HttpGet("/Bookings")]
     public ActionResult<List<BookDto>> Bookings()
     {
-        var MyBookings = bookings.Select(Book => new Booking(Book.PassengerEmail, Book.NumberOfSeats)).ToList();
+        var MyBookings = _entities.bookings.Select(Book => new Booking(Book.PassengerEmail, Book.NumberOfSeats)).ToList();
         return Ok(MyBookings);
     }
 
@@ -118,7 +93,7 @@ public class FlightController : ControllerBase
     [ProducesResponseType(400)]
     public ActionResult<List<BookDto>> MyBookings(string userEmail)
     {
-        var MyBookings = bookings.FindAll(bk => bk.PassengerEmail == userEmail);
+        var MyBookings = _entities.bookings.FindAll(bk => bk.PassengerEmail == userEmail);
         return Ok(MyBookings);
     }
 

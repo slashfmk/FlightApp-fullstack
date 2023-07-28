@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace backend.Domain.Errors
 {
-    public class NotPositiveError
+    public class NotPositiveError : Error
     {
         
     }
