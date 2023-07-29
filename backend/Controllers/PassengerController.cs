@@ -37,6 +37,8 @@ namespace backend.Controllers
                 dto.IsFemale
             ));
 
+            _entities.SaveChanges();
+
             // System.Diagnostics.Debug.WriteLine(Passengers.Count);
             return Created("Passenger created successfully", dto);
         }

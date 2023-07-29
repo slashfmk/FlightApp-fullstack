@@ -3,44 +3,39 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using backend.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Data
 {
-    public class Entities
+    public class Entities : DbContext
     {
 
         static Random Randomize = new Random();
 
-        public  List<Passenger> Passengers = new();
+        public DbSet<Passenger> Passengers => Set<Passenger>();
 
-        public  List<Booking> bookings = new();
+         public DbSet<Booking> Bookings => Set<Booking>();
 
-        public  List<Flight> Flights = new List<Flight> {
+        public DbSet<Flight> Flights => Set<Flight>();
 
-        new Flight(
-                   Guid.NewGuid(),
-                   "United airline", Randomize.NextInt64(3000),
-                   new TimePlace("Ottawa", DateTime.Now),
-                   new TimePlace("kinshasa", DateTime.Now),
-                   20
-                   ),
+        public Entities(DbContextOptions<Entities> options) : base(options)
+        {
+        }
 
-        new Flight(
-            Guid.NewGuid(),
-            "Africa airline", Randomize.NextInt64(3000),
-            new TimePlace("Los angeles", DateTime.Now),
-            new TimePlace("Johannesburg", DateTime.Now),
-             (int)Randomize.NextInt64(500)
-            ),
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Setting the primary key
+            modelBuilder.Entity<Passenger>().HasKey(p => p.Email);
+            modelBuilder.Entity<Booking>().HasKey(p => p.PassengerEmail);
 
-        new Flight(
-        Guid.NewGuid(),
-        "Wonderful airline", Randomize.NextInt64(3000),
-        new TimePlace("Minnesota", DateTime.Now),
-        new TimePlace("New Hampshire", DateTime.Now),
-         (int)Randomize.NextInt64(500)
-        )
-    };
+            // Prevent race condition for a field in a table
+            // for this case prevent 2 people for booking the same number of seats when remaining
+            modelBuilder.Entity<Flight>().Property(p => p.RemainingSeats).IsConcurrencyToken();
+
+            // Register complex data type in a db
+            modelBuilder.Entity<Flight>().OwnsOne(f => f.Departure);
+            modelBuilder.Entity<Flight>().OwnsOne(f => f.Arrival);
+        }
 
     }
 }

@@ -4,6 +4,7 @@ using backend.Dtos;
 using backend.Domain.Entities;
 using backend.Domain.Errors;
 using backend.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers;
 
@@ -56,6 +57,7 @@ public class FlightController : ControllerBase
         );
 
         if (FoundFlight == null) return NotFound();
+
         return Ok(readModel);
     }
 
@@ -76,14 +78,25 @@ public class FlightController : ControllerBase
         if (Error is OverbookError) return Conflict(new { message = "Sorry, Not enough seats available" });
         if (Error is NotPositiveError) return Conflict(new { message = "You cannot provide a negative number of seats" });
 
+        try
+        {
+            _entities.SaveChanges();
+        }
+        catch (DbUpdateConcurrencyException e)
+        {
+            // throw if race condition happens
+            return Conflict(new { message = "An Error occurred while booking" });
+        }
+
         var confirmation = $"user: {bookDto.PassengerEmail} booked for flight {bookDto.FlightId}";
+
         return Created("Booking created", confirmation);
     }
 
     [HttpGet("/Bookings")]
     public ActionResult<List<BookDto>> Bookings()
     {
-        var MyBookings = _entities.bookings.Select(Book => new Booking(Book.PassengerEmail, Book.NumberOfSeats)).ToList();
+        var MyBookings = _entities.Bookings.Select(Book => new Booking(Book.PassengerEmail, Book.NumberOfSeats)).ToList();
         return Ok(MyBookings);
     }
 
@@ -93,7 +106,7 @@ public class FlightController : ControllerBase
     [ProducesResponseType(400)]
     public ActionResult<List<BookDto>> MyBookings(string userEmail)
     {
-        var MyBookings = _entities.bookings.FindAll(bk => bk.PassengerEmail == userEmail);
+        var MyBookings = _entities.Bookings.Where(bk => bk.PassengerEmail == userEmail);
         return Ok(MyBookings);
     }
 
