@@ -30,16 +30,22 @@ namespace backend.Controllers
         [ProducesResponseType(500)]
         public ActionResult<string> Register(PassengerDto dto)
         {
-            _entities.Passengers.Add(new Passenger(
+
+            var PassengerToSave = new Passenger(
                 dto.Email,
                 dto.FirstName,
                 dto.LastName,
                 dto.IsFemale
-            ));
+            );
+
+           // _entities.Passengers.Add(PassengerToSave);
+
+            var exists = _entities.Passengers.Contains(PassengerToSave);
+
+            if (exists) return Conflict(new { message = "Passenger exists already" });
 
             _entities.SaveChanges();
 
-            // System.Diagnostics.Debug.WriteLine(Passengers.Count);
             return Created("Passenger created successfully", dto);
         }
 

@@ -5,7 +5,7 @@ namespace backend.Domain.Entities
 {
     public class Flight
     {
-        public List<Booking> bookings = new();
+        public List<Booking> Bookings = new();
 
         public Guid Id { get; set; } = default!;
         public string Airline { get; set; } = default!;
@@ -34,7 +34,7 @@ namespace backend.Domain.Entities
             // Not enough seats available for booking request
             if (this.RemainingSeats < NumberOfSeats) return new OverbookError();
             // Then add that booking when everything goes well
-            this.bookings.Add(new Booking(PassengerEmail, NumberOfSeats));
+            this.Bookings.Add(new Booking(PassengerEmail, NumberOfSeats));
             // Update the number of available seats
             this.RemainingSeats -= NumberOfSeats;
             return null;

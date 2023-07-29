@@ -23,6 +23,7 @@ builder.Services.AddSwaggerGen();
 //? Add the Entities as a singleton
 builder.Services.AddSingleton<Entities>();
 
+
 var app = builder.Build();
 
 /**

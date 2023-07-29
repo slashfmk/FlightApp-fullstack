@@ -1,7 +1,9 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { bookingRm } from '../api/models/booking-rm';
+import { BookingService } from '../api/services/booking.service';
 import { FlightService } from '../api/services/flight.service';
 import { AuthService } from '../auth/auth.service';
-import { IBookDto } from '../api/models/IBookDto';
 
 @Component({
   selector: 'app-my-bookings',
@@ -9,20 +11,25 @@ import { IBookDto } from '../api/models/IBookDto';
     <h1 *ngIf="currentUserEmail">Bookings for user: {{ currentUserEmail }}</h1>
     <h2 class="text-3xl font-light py-4">List of booked flights:</h2>
     <div *ngFor="let booking of bookingItems">
-      <p>{{ booking.PassengerEmail }}</p>
+      <p>{{ booking.airline }}</p>
     </div>
   `,
   styles: [],
 })
 export class MyBookingsComponent implements OnInit {
+
   private flightService = inject(FlightService);
   private authService = inject(AuthService);
+  private bookingService = inject(BookingService);
+  private router = inject(Router);
+
   currentUserEmail = '';
-  bookingItems: IBookDto[] = [];
+  bookingItems: bookingRm[] = [];
 
   constructor() {}
 
   ngOnInit(): void {
+    if (!this.authService.currentUser) this.router.navigate(['/']);
     this.getBookings();
   }
 
@@ -30,9 +37,9 @@ export class MyBookingsComponent implements OnInit {
     this.currentUserEmail = this.authService.currentUser?.email as string;
     if (!this.currentUserEmail) return;
 
-    this.flightService.getBookedFlights(this.currentUserEmail).subscribe(
+    this.bookingService.getMyBookings(this.currentUserEmail).subscribe(
       (bookings) => {
-        this.bookingItems = bookings;
+       this.bookingItems = bookings;
         console.log(bookings);
       },
       (error) => console.log(error)

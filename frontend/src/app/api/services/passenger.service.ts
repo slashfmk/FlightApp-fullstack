@@ -26,4 +26,5 @@ export class PassengerService {
   getPassenger(email: string): Observable<IPassenger> {
     return this.http.get<IPassenger>(`${this.apiUrl}/${email}`);
   }
+
 }
