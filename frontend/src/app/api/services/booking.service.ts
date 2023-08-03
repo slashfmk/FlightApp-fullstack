@@ -22,5 +22,8 @@ export class BookingService implements OnInit {
     return this.http.get<bookingRm[]>(`${this.apiUrl}/${email}`);
   }
 
+  // Cancel booking
+
+
 
 }

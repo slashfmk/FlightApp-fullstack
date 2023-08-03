@@ -8,8 +8,47 @@ import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-book-flight',
-  templateUrl: './book-flight.component.html',
-  styleUrls: ['./book-flight.component.css'],
+  template: `
+    <div
+      *ngIf="errorStatus !== 200"
+      class="p-8 bg-red-300 text-red-700 font-bold"
+    >
+      <h2>Flight with id : {{ flightId }} has not been found!</h2>
+    </div>
+
+    <h2>{{ flightId }} vvvvv</h2>
+
+    <!-- Form validation UI -->
+    <div
+      *ngIf="seatNumber.invalid && (seatNumber.dirty || seatNumber.touched)"
+      class="bg-red-200 text-red-800 p-6"
+    >
+      <div *ngIf="seatNumber.errors?.['required']">
+        You must provide a number
+      </div>
+      <div *ngIf="seatNumber.errors?.['min']">
+        You cannot book for less than 1 passenger
+      </div>
+      <div *ngIf="seatNumber.errors?.['max']">
+        Our plan doesn't have more than 254 seats
+      </div>
+    </div>
+
+    <form [formGroup]="form">
+      <label for="">Number of seats to reserve: </label>
+      <input
+        formControlName="seats"
+        [ngClass]="seatNumber.invalid ? 'border-red-600' : ''"
+        id="seats"
+        type="number"
+        class="p-4 border-2 border-solid border-grey-700"
+        placeholder="Number of seats"
+      />
+      <button class="p-3 bg-blue-500 text-white m-4" (click)="bookFlight()">
+        Book
+      </button>
+    </form>
+  `,
 })
 export class BookFlightComponent implements OnInit {
   foundFlight: FlightRm = {};
@@ -21,12 +60,13 @@ export class BookFlightComponent implements OnInit {
 
   formBuilder = inject(FormBuilder);
 
-  @Input() flightId = '';
+  @Input()
+  flightId = '';
 
   constructor(private router: Router) {}
 
   ngOnInit(): void {
-    // console.log(this.flightId);
+    console.log(this.flightId);
   }
 
   form = this.formBuilder.group({

@@ -39,5 +39,15 @@ namespace backend.Domain.Entities
             this.RemainingSeats -= NumberOfSeats;
             return null;
         }
+
+        public Error? CancelBooking(string PassengerEmail, byte NumberOfSeats) {
+            // Find passenger booking
+            var FoundFlight = this.Bookings.FirstOrDefault(b => b.PassengerEmail.ToLower() == PassengerEmail.ToLower());
+            if (FoundFlight is null) return new NotFound();
+            // Let's delete it all
+            this.Bookings.Remove(FoundFlight);
+            this.RemainingSeats += NumberOfSeats;
+            return null;
+        }
     }
 }

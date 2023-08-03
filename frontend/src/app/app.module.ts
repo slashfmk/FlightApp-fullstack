@@ -13,6 +13,7 @@ import { NotfoundComponent } from './notfound/notfound.component';
 import { RegisterPassengerComponent } from './register-passenger/register-passenger.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MyBookingsComponent } from './my-bookings/my-bookings.component';
+import { CardComponent } from './card/card.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { MyBookingsComponent } from './my-bookings/my-bookings.component';
     NotfoundComponent,
     RegisterPassengerComponent,
     MyBookingsComponent,
+    CardComponent,
   ],
   imports: [
     FormsModule,

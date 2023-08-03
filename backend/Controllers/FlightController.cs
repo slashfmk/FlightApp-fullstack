@@ -110,4 +110,25 @@ public class FlightController : ControllerBase
         return Ok(MyBookings);
     }
 
+    [HttpPut("/MyBooking")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(400)]
+    public ActionResult CancelBooking(BookDto bookDto)
+    {
+
+        // Find the flight to cancel the booking from
+        var FoundFlight = this._entities.Flights.Find(bookDto.FlightId);
+
+        var OperationResult = FoundFlight.CancelBooking(bookDto.PassengerEmail, bookDto.NumberOfSeats);
+
+        if (OperationResult == null) 
+        {
+            this._entities.SaveChanges();
+            return Ok("Booking cancelled successfully");
+        }
+
+        return NotFound(bookDto);
+    }
+
 }

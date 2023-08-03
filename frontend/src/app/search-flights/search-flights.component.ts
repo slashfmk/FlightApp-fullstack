@@ -5,8 +5,74 @@ import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-search-flights',
-  templateUrl: './search-flights.component.html',
-  providers: [FlightService],
+  template: `
+    <div class="flex flex-col px-6">
+      <h5 class="text-center text-2xl">Search flights</h5>
+
+      <div class="flex flex-row justify-between gap-8 w-full m-6">
+        <input
+          type="text"
+          name="from"
+          placeholder="From"
+          class="p-4 w-full border-solid border-2"
+        />
+        <input
+          type="text"
+          name="to"
+          placeholder="To"
+          class="p-4 w-full border-solid border-2"
+        />
+      </div>
+
+      <div class="flex flex-row justify-between gap-8 w-full m-6">
+        <input
+          type="date"
+          name="fromdate"
+          placeholder="From"
+          class="p-4 w-full border-solid border-2"
+        />
+        <input
+          type="date"
+          name="todate"
+          placeholder="To"
+          class="p-4 w-full border-solid border-2"
+        />
+      </div>
+
+      <div class="flex flex-cols gap-5">
+        <label for="passengers" class="text-right self-center w-full"
+          >Number of Passengers</label
+        >
+
+        <div class="flex flex-cols gap-2 w-full justify-end">
+          <input
+            type="number"
+            name="pnumber"
+            placeholder="# passengers"
+            class="p-4 w-full border-solid border-2"
+          />
+          <button (click)="search()" class="bg-blue-700 text-white w-28">
+            Submit
+          </button>
+        </div>
+      </div>
+
+      <div *ngFor="let flight of searchResult">
+        <app-card
+          airline="{{ flight.airline }}"
+          [remainingSeats]="flight.remainingSeats ?? 0"
+          [isLoggedIn]="userExists"
+          departureTime="{{ flight.departure?.time }}"
+          departurePlace="{{ flight.departure?.place }}"
+          arrivalTime="{{ flight.departure?.time }}"
+          arrivalPlace="{{ flight.arrival?.place }}"
+          flightId={{flight.id}}
+          [price]="flight.price ?? 0"
+        ></app-card>
+      </div>
+    </div>
+  `,
+  // providers: [FlightService],
 })
 export class SearchFlightsComponent implements OnInit {
   searchResult: FlightRm[] = [];
@@ -29,8 +95,8 @@ export class SearchFlightsComponent implements OnInit {
     this.isLoading = false;
   }
 
-  public userExists() {
-    return this.authService.currentUser;
+  public get userExists(): boolean {
+    return this.authService.currentUser !== undefined;
   }
 
   // Create a new flight

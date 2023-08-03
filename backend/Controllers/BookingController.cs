@@ -41,5 +41,12 @@ namespace backend.Controllers
 
             return Ok(Bookings);
         }
+
+        // [HttpPost("{BookingId}")]
+        // public ActionResult<String> cancelBooking(string BookingId)
+        // {
+
+        //     this._entities.Bookings.Remove()
+        // }
     }
 }

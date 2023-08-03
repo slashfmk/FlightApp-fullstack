@@ -15,7 +15,7 @@ export class FlightService {
 
   // * Read flights -- completed
   getFlights(): Observable<FlightRm[]> {
-    return this.http.get<FlightRm[]>(this.apiUrl + "/Flight");
+    return this.http.get<FlightRm[]>(this.apiUrl + '/Flight');
   }
 
   // * get single flight
@@ -25,12 +25,12 @@ export class FlightService {
 
   // * create service
   createFlight(data: FlightRm) {
-    return this.http.post<FlightRm>(this.apiUrl + "/Flight", { data });
+    return this.http.post<FlightRm>(this.apiUrl + '/Flight', { data });
   }
 
   // TODO Book flight
   bookFlight(data: IBookDto): Observable<string> {
-    return this.http.post<string>(`${this.apiUrl}/Booking`, data );
+    return this.http.post<string>(`${this.apiUrl}/Booking`, data);
   }
 
   // TODO Get booking flights
@@ -38,4 +38,8 @@ export class FlightService {
     return this.http.get<IBookDto[]>(`${this.apiUrl}/MyBookings/${email}`);
   }
 
+  // Cancel booked flight
+  cancelBooking(data: IBookDto): Observable<string> {
+    return this.http.put<string>(`${this.apiUrl}/MyBooking`, data);
+  }
 }
