@@ -66,7 +66,7 @@ export class BookFlightComponent implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit(): void {
-    console.log(this.flightId);
+   // console.log(this.flightId);
   }
 
   form = this.formBuilder.group({

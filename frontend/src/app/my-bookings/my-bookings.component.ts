@@ -43,7 +43,7 @@ export class MyBookingsComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    if (!this.authService.currentUser) this.router.navigate(['/']);
+   // if (!this.authService.currentUser) this.router.navigate(['/']);
     this.getBookings();
   }
 
@@ -67,6 +67,7 @@ export class MyBookingsComponent implements OnInit {
 
   getBookings(): void {
     this.currentUserEmail = this.authService.currentUser?.email as string;
+
     if (!this.currentUserEmail) return;
 
     this.bookingService.getMyBookings(this.currentUserEmail).subscribe(

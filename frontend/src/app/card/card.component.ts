@@ -17,8 +17,7 @@ import { FlightRm } from '../api/models/flight-rm';
 
         <div>
           <h3>{{price}}</h3>
-          <button *ngIf="isLoggedIn" [routerLink]="['/book-flights/', flightId]" class="bg-slate-700 text-slate-400 p-3 rounded-md">Book</button>
-          <button *ngIf="!isLoggedIn" [routerLink]="['/register-passenger']" class="bg-slate-700 text-slate-400 p-3 rounded-md">Book</button>
+          <button [routerLink]="['/book-flights/', flightId]" class="bg-slate-700 text-slate-400 p-3 rounded-md">Book</button>
         </div>
 
         <div>

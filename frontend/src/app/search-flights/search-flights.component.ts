@@ -99,20 +99,4 @@ export class SearchFlightsComponent implements OnInit {
     return this.authService.currentUser !== undefined;
   }
 
-  // Create a new flight
-  public createFlight() {
-    // Entry to add flight
-    const flight: FlightRm = {
-      price: 452.22,
-      remainingSeats: 455,
-      airline: 'lufthansa',
-      arrival: { place: 'Russia', time: Date.now().toString() },
-      departure: { place: 'Brazzaville', time: Date.now().toString() },
-      id: '445484ded84dc48ce8ec4c',
-    };
-
-    this.flightService
-      .createFlight(flight)
-      .subscribe((response) => console.log(response));
-  }
 }

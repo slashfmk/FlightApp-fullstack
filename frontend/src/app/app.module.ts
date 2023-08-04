@@ -14,6 +14,7 @@ import { RegisterPassengerComponent } from './register-passenger/register-passen
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MyBookingsComponent } from './my-bookings/my-bookings.component';
 import { CardComponent } from './card/card.component';
+import { authGuard } from './auth/auth.guard';
 
 @NgModule({
   declarations: [
@@ -35,9 +36,9 @@ import { CardComponent } from './card/card.component';
     RouterModule.forRoot([
       { path: '', component: SearchFlightsComponent, pathMatch: 'full' },
       { path: 'search-flights', component: SearchFlightsComponent },
-      { path: 'book-flights/:flightId', component: BookFlightComponent },
+      { path: 'book-flights/:flightId', component: BookFlightComponent, canActivate: [authGuard]},
       { path: 'register-passenger', component: RegisterPassengerComponent },
-      {path: 'my-bookings', component: MyBookingsComponent},
+      {path: 'my-bookings', component: MyBookingsComponent, canActivate: [authGuard]},
       { path: '**', component: NotfoundComponent }],
       {bindToComponentInputs: true}) // Allows the use of @Input() for url param
     ,
