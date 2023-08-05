@@ -6,12 +6,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 /**
 * ? Add db context
-* ? Create an InMemory database name flights
+* ? Connection info passed using Builder configuration string
+* it's coming from appsettings.json
 */
 builder.Services.AddDbContext<Entities>(
-    options => options.UseInMemoryDatabase(databaseName: "Flights"),
-    ServiceLifetime.Singleton
-    );
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("Flights")));
 
 
 // Add services to the container.
@@ -21,8 +20,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //? Add the Entities as a singleton
-builder.Services.AddSingleton<Entities>();
-
+builder.Services.AddScoped<Entities>();
 
 var app = builder.Build();
 
@@ -31,7 +29,14 @@ var app = builder.Build();
 * ? by creating a ServiceScope after the app build()
 */
 var entities = app.Services.CreateScope().ServiceProvider.GetService<Entities>();
+
+entities.Database.EnsureCreated();
+
 var Randomize = new Random();
+
+// check so we can seed once
+if(!entities.Flights.Any())
+{
 
 Flight[] flightsToSeed = new Flight[]
 {
@@ -60,10 +65,13 @@ Flight[] flightsToSeed = new Flight[]
         )
 };
 
-entities.Flights.AddRange(flightsToSeed);
-// Saving the seeding data to the db
-entities.SaveChanges();
-// # Pre-seeding end
+    entities.Flights.AddRange(flightsToSeed);
+    // Saving the seeding data to the db
+    entities.SaveChanges();
+    // # Pre-seeding end
+
+}
+
 
 // Cors setting
 app.UseCors(builder => builder

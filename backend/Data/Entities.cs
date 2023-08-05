@@ -11,11 +11,8 @@ namespace backend.Data
     {
 
         static Random Randomize = new Random();
-
         public DbSet<Passenger> Passengers => Set<Passenger>();
-
          public DbSet<Booking> Bookings => Set<Booking>();
-
         public DbSet<Flight> Flights => Set<Flight>();
 
         public Entities(DbContextOptions<Entities> options) : base(options)
@@ -26,7 +23,6 @@ namespace backend.Data
         {
             // Setting the primary key
             modelBuilder.Entity<Passenger>().HasKey(p => p.Email);
-            modelBuilder.Entity<Booking>().HasKey(p => p.PassengerEmail);
 
             // Prevent race condition for a field in a table
             // for this case prevent 2 people for booking the same number of seats when remaining
@@ -35,6 +31,7 @@ namespace backend.Data
             // Register complex data type in a db
             modelBuilder.Entity<Flight>().OwnsOne(f => f.Departure);
             modelBuilder.Entity<Flight>().OwnsOne(f => f.Arrival);
+            modelBuilder.Entity<Flight>().OwnsMany(f => f.Bookings);
         }
 
     }
