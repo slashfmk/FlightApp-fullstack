@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FlightRm } from '../models/flight-rm';
 import { IBookDto } from '../models/IBookDto';
+import { ISearchParams } from '../models/ISearchParams';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class FlightService {
   constructor(private http: HttpClient) {}
 
   // * Read flights -- completed
-  getFlights(): Observable<FlightRm[]> {
+  getFlights(params: ISearchParams): Observable<FlightRm[]> {
     return this.http.get<FlightRm[]>(this.apiUrl + '/Flight');
   }
 
@@ -42,4 +43,7 @@ export class FlightService {
   cancelBooking(data: IBookDto): Observable<string> {
     return this.http.put<string>(`${this.apiUrl}/MyBooking`, data);
   }
+
+  // get flights based on search args
+
 }

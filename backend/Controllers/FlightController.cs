@@ -14,20 +14,27 @@ public class FlightController : ControllerBase
 {
 
     private readonly Entities _entities;
+    private readonly ILogger<FlightController> _logger;
 
-    public FlightController(Entities entities)
+    public FlightController(Entities entities, ILogger<FlightController> logger)
     {
         _entities = entities;
+        _logger = logger;
     }
 
+    // TODO not done being implemented
     [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     [ProducesResponseType(typeof(List<FlightRm>), 200)]
     [HttpGet(Name = "GetSearch")]
-    public ActionResult<List<FlightRm>> Search()
+    public ActionResult<List<FlightRm>> Search([FromQuery] FlightSearchParameters param)
     {
 
-        var flightRmList = _entities.Flights.Select(Flight => new FlightRm(
+        this._logger.LogInformation($"Log infos destination: {param.from} ");
+
+        var flightRmList = _entities.Flights
+            .Where(f => f.Arrival.Place == param.to)
+            .Select(Flight => new FlightRm(
             Flight.Id,
             Flight.Airline,
             Flight.Price,
